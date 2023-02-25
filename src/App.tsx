@@ -11,14 +11,34 @@ function App() {
   const [posts, setPosts] = useState<PostsData[]>([]);
   const [comments, setComments] = useState<CommentsData[]>([]);
 
+  const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+
   useEffect(() => {
     PostApi().then((res) => {
       setPosts(res);
     });
-    CommentsApi().then((res) => {
-      setComments(res);
-    });
+
+ 
+  
   }, []);
+
+  useEffect(() => {
+
+    sleep(2000).then(() => {
+      CommentsApi().then((res) => {
+        setComments(res);
+      });
+    }
+    );
+
+  }, []);
+
+
+
+
 
   return (
     <div className='App'>
@@ -27,14 +47,15 @@ function App() {
           return <Posts key={post.id} post={post} />;
         })}
 
-        {/* <div>
+        <div>
           {comments.map((comment) => {
             return <Comments key={comment.id} comment={comment} />;
           })}
-        </div> */}
+        </div>
       </div>
     </div>
   );
 }
 
 export default App;
+
